@@ -374,15 +374,6 @@ plt.show()
 #########################################################
 
 # Plot alpha male number of interactions until ranking does not change anymore
-
-
-RankCorrs = dict()
-for b in Batches:
-    temp = numpy.genfromtxt(os.path.join(Path,f'GlickoHistoryB{str(b)}.csv'), delimiter=',')
-    temp=temp[1:,1:]
-    print(f'{get_dominance_point(temp)} for Batch B{b}')
-
-
 def get_dominance_point(_array):
     '''
     extract the last time first time point where final dominant animal doesn't change anymore
@@ -398,3 +389,19 @@ def get_dominance_point(_array):
         else:
             break;
     return(numpy.array(order).min())
+
+
+Dominance = numpy.zeros([1,len(Batches)])
+Interactions = numpy.zeros([1,len(Batches)])
+for b in Batches:
+    temp = numpy.genfromtxt(os.path.join(Path,f'GlickoHistoryB{str(b)}.csv'), delimiter=',')
+    temp=temp[1:,1:]
+    Dominance[0,Batches.index(b)] = int(get_dominance_point(temp))
+    Interactions[0,Batches.index(b)] = int(temp.shape[1])
+    # print(f'{get_dominance_point(temp)} for Batch B{b}')
+
+plt.scatter(numpy.repeat(1,10), Dominance[0] / Interactions[0])
+plt.show()
+
+
+
