@@ -400,8 +400,32 @@ for b in Batches:
     Interactions[0,Batches.index(b)] = int(temp.shape[1])
     # print(f'{get_dominance_point(temp)} for Batch B{b}')
 
-plt.scatter(numpy.repeat(1,10), Dominance[0] / Interactions[0])
+plt.scatter(numpy.repeat(1,10), Dominance[0] / Interactions[0], marker = [numpy.concatenate([numpy.repeat('*',5), numpy.repeat('o', 5)])])
 plt.show()
+
+
+markers = numpy.concatenate([numpy.repeat('*',5), numpy.repeat('+', 5)])
+
+labels = numpy.concatenate([numpy.repeat('Tph2 +/+',5), numpy.repeat('Tph2 -/-', 5)])
+
+WT = mlines.Line2D([], [], color='black', alpha = .5,  marker='*', linestyle='None',
+                          markersize=10, label='Tph2 +/+')
+KO = mlines.Line2D([], [], color='black', alpha = .5, marker='+', linestyle='None',
+                          markersize=10, label='Tph2 -/-')
+
+for i in numpy.arange(10):
+    plt.scatter(Dominance[0][i], Interactions[0][i], marker = markers[i], color = 'black', alpha = .5, s = 50)
+
+plt.xlabel('Dominance Count')
+plt.ylabel('Interaction Count')
+plt.legend(handles = [WT,KO])
+# plt.legend(['*','+'],['Tph2 +/+','Tph2 -/-'])
+plt.show()
+
+
+import matplotlib.lines as mlines
+
+
 
 
 
