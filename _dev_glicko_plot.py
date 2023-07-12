@@ -380,20 +380,21 @@ RankCorrs = dict()
 for b in Batches:
     temp = numpy.genfromtxt(os.path.join(Path,f'GlickoHistoryB{str(b)}.csv'), delimiter=',')
     temp=temp[1:,1:]
+    print(f'{get_dominance_point(temp)} for Batch B{b}')
 
 
-for i in numpy.arange(order.shape[1]):
-    order[:,i] = numpy.argsort(temp[:,i], kind='stable')
-
-    def get_
-
-id = numpy.where(temp[:,-1]==temp[:,-1].max())[0][0]
-
-order = []
-
-[ order.append(i) for i in numpy.arange(temp.shape[1]) if temp[id,i]==temp[:,i].max() ]
-
-
-for i in numpy.arange(temp.shape[1]):
-    if temp[id,i]==temp[:,i].max():
-        order.append(i)
+def get_dominance_point(_array):
+    '''
+    extract the last time first time point where final dominant animal doesn't change anymore
+    '''
+    id = numpy.where(_array[:,-1]==_array[:,-1].max())[0][0]
+    if _array[id,-2] != _array[:,-2].max():
+        return(_array.shape[1])
+    order = []
+    test_index = numpy.sort(numpy.arange(_array.shape[1]-1))[::-1]
+    for i in test_index:
+        if _array[id,i] == _array[:,i].max():
+            order.append(i)
+        else:
+            break;
+    return(numpy.array(order).min())
