@@ -139,12 +139,15 @@ for b in Batches:
     print(f'{b} - {x}')
     temp = load_data(b)
     plot_single_animals(axs[x,id],temp)
-    axs[x,id].set_title(str(Batches.index(b)+1))
+    axs[x,id].set_title(str(Batches.index(b)+1), loc = 'left')
     if id == 0:
-        axs[x,id].set(ylabel='glicko rating')
+        if Batches.index(b)<5:
+           axs[x,id].set(ylabel='Tph2 +/+ \n glicko rating')
+        else:
+            axs[x,id].set(ylabel='Tph2 -/- \n glicko rating')
 
 plt.tight_layout()
-plt.savefig(f'/{Path}/GlickoHistory-classic.png')
+plt.savefig(f'/{Path}/Plots/GlickoHistory-classic.png')
 plt.close()
 
 
@@ -174,83 +177,102 @@ for b in Batches:
 
 # plt.subplot(1,2,2)
 # for i in numpy.arange(5,10):
-#     plt.scatter(MiddleRatingRescale[:,i],LastRatingRescale[:,i])
+# #     plt.scatter(MiddleRatingRescale[:,i],LastRatingRescale[:,i])
 
-# last rating rescaled
-plt.subplot(1,2,1)
-for i in numpy.arange(5):
-    plt.scatter(numpy.repeat(i+1,4),LastRatingRescale[:,i],label=f'B{Batches[i]}', color='black')
+# # last rating rescaled
+# plt.subplot(1,2,1)
+# for i in numpy.arange(5):
+#     plt.scatter(numpy.repeat(i+1,4),LastRatingRescale[:,i],label=f'B{Batches[i]}', color='black')
 
-plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
-plt.title('wildtype')
-plt.subplot(1,2,2)
-for i in numpy.arange(5,10):
-    plt.scatter(numpy.repeat(i-4,4),LastRatingRescale[:,i],label=f'B{Batches[i]}', color='black')
+# plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+# plt.title('wildtype')
+# plt.subplot(1,2,2)
+# for i in numpy.arange(5,10):
+#     plt.scatter(numpy.repeat(i-4,4),LastRatingRescale[:,i],label=f'B{Batches[i]}', color='black')
 
-plt.yticks(ticks = numpy.arange(-1,1.25,0.25), labels=[])
-plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
-plt.title('KO')
-plt.show()
+# plt.yticks(ticks = numpy.arange(-1,1.25,0.25), labels=[])
+# plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+# plt.title('KO')
+# plt.show()
 
-# last rating
-plt.subplot(1,2,1)
-for i in numpy.arange(5):
-    plt.scatter(numpy.repeat(i+1,4),LastRating[:,i],label=f'B{Batches[i]}', color='black')
+# # last rating
+# plt.subplot(1,2,1)
+# for i in numpy.arange(5):
+#     plt.scatter(numpy.repeat(i+1,4),LastRating[:,i],label=f'B{Batches[i]}', color='black')
 
-# plt.plot(numpy.mean(LastRating[:,0:5], axis = 0), ls='--', label='mean')
-plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
-plt.title('wildtype')
-plt.subplot(1,2,2)
-for i in numpy.arange(5,10):
-    plt.scatter(numpy.repeat(i-4,4),LastRating[:,i],label=f'B{Batches[i]}', color='black')
+# # plt.plot(numpy.mean(LastRating[:,0:5], axis = 0), ls='--', label='mean')
+# plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+# plt.title('wildtype')
+# plt.subplot(1,2,2)
+# for i in numpy.arange(5,10):
+#     plt.scatter(numpy.repeat(i-4,4),LastRating[:,i],label=f'B{Batches[i]}', color='black')
 
-# plt.plot(numpy.mean(LastRating[:,5:10], axis = 0), ls='--', label='mean')
-plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
-plt.title('KO')
-plt.show()
+# # plt.plot(numpy.mean(LastRating[:,5:10], axis = 0), ls='--', label='mean')
+# plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+# plt.title('KO')
+# plt.show()
 
+# #########################################################
+#
 # last rating rescaled within genotype at last timepoint
-plt.subplot(1,2,1)
+#
+#########################################################
+
+fig, axs = plt.subplots(2, 1, figsize=(5,10))
+
+plt.subplot(2,1,1)
 for i in numpy.arange(5):
     temp = LastRating[:,i] / abs(LastRating[:,0:5]).max()
     plt.scatter(numpy.repeat(i+1,4),temp,label=f'B{Batches[i]}', color='black')
     plt.ylim(-1.1,1.1)
 
-plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,0:5], axis = 0), ls='--', label='mean')
-plt.title('wildtype')
+plt.ylabel('Final Glicko rating (rescaled)')
+plt.xticks(ticks = numpy.arange(1,6), labels=numpy.arange(1,6))
+plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+# plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,0:5], axis = 0), ls='--', label='mean')
+plt.title('Tph2 +/+')
 
-plt.subplot(1,2,2)
+plt.subplot(2,1,2)
 for i in numpy.arange(5,10):
     temp = LastRating[:,i] / abs(LastRating[:,5:10]).max()
     plt.scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', color='black')
     plt.ylim(-1.1,1.1)
 
-plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,5:10], axis = 0), ls='--', label='mean')
-plt.title('KO')
+plt.ylabel('Final Glicko rating (rescaled)')
+# plt.yticks(ticks = numpy.arange(-1,1.25,0.25), labels=[])
+plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+plt.xticks(ticks = numpy.arange(1,6), labels=numpy.arange(6,11))
+# plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,5:10], axis = 0), ls='--', label='mean')
+plt.title('Tph2 -/-')
+plt.xlabel('Batches')
 
+# plt.tick_params(which = 'both', top=False, bottom=False, left=False, right=False)
+# plt.xlabel("Batches")
+
+plt.tight_layout()
 plt.show()
 
 
 # last rating rescaled at last timepoint
-plt.subplot(1,2,1)
-for i in numpy.arange(5):
-    temp = LastRating[:,i] / abs(LastRating).max()
-    plt.scatter(numpy.repeat(i+1,4),temp,label=f'B{Batches[i]}', color='black')
-    plt.ylim(-1.1,1.1)
+# plt.subplot(1,2,1)
+# for i in numpy.arange(5):
+#     temp = LastRating[:,i] / abs(LastRating).max()
+#     plt.scatter(numpy.repeat(i+1,4),temp,label=f'B{Batches[i]}', color='black')
+#     plt.ylim(-1.1,1.1)
 
-plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,0:5], axis = 0), ls='--', label='mean')
-plt.title('wildtype')
+# plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,0:5], axis = 0), ls='--', label='mean')
+# plt.title('wildtype')
 
-plt.subplot(1,2,2)
-for i in numpy.arange(5,10):
-    temp = LastRating[:,i] / abs(LastRating).max()
-    plt.scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', color='black')
-    plt.ylim(-1.1,1.1)
+# plt.subplot(1,2,2)
+# for i in numpy.arange(5,10):
+#     temp = LastRating[:,i] / abs(LastRating).max()
+#     plt.scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', color='black')
+#     plt.ylim(-1.1,1.1)
 
-plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,5:10], axis = 0), ls='--', label='mean')
-plt.title('KO')
+# plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,5:10], axis = 0), ls='--', label='mean')
+# plt.title('KO')
 
-plt.show()
+# plt.show()
 
 
 # # plot ranks
@@ -333,4 +355,45 @@ plt.show()
 # plt.close()
 
 
-scipy.stats.entropy(temp[:,0])
+#########################################################
+#                                                       #
+#                        DESPOTISM                      #
+#                                                       #
+#########################################################
+
+
+# Plot dominant animal with number of agonistic behavior before reaching 80%
+
+
+
+
+#########################################################
+#                                                       #
+#                   STABLE DOMINANCE                    #
+#                                                       #
+#########################################################
+
+# Plot alpha male number of interactions until ranking does not change anymore
+
+
+RankCorrs = dict()
+for b in Batches:
+    temp = numpy.genfromtxt(os.path.join(Path,f'GlickoHistoryB{str(b)}.csv'), delimiter=',')
+    temp=temp[1:,1:]
+
+
+for i in numpy.arange(order.shape[1]):
+    order[:,i] = numpy.argsort(temp[:,i], kind='stable')
+
+    def get_
+
+id = numpy.where(temp[:,-1]==temp[:,-1].max())[0][0]
+
+order = []
+
+[ order.append(i) for i in numpy.arange(temp.shape[1]) if temp[id,i]==temp[:,i].max() ]
+
+
+for i in numpy.arange(temp.shape[1]):
+    if temp[id,i]==temp[:,i].max():
+        order.append(i)
