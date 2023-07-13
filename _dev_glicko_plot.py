@@ -34,7 +34,7 @@
 
 # python
 # python3
-import os, numpy, matplotlib.pyplot as plt, scipy.stats
+import os, numpy, matplotlib.pyplot as plt, scipy.stats, matplotlib.lines as mlines
 # Path='/data' 
 Path = f'{os.getcwd()}/Data'
 
@@ -354,7 +354,6 @@ plt.show()
 # plt.savefig(f'/data/Batch{str(b)}-history-error.png')
 # plt.close()
 
-
 #########################################################
 #                                                       #
 #                        DESPOTISM                      #
@@ -362,11 +361,55 @@ plt.show()
 #########################################################
 
 
-# Plot dominant animal with number of agonistic behavior before reaching 80%
+# Plot alpha power for each batch
+# alpha power defined as the ratio of power (difference in glicko rating) expressed from alpha male over beta over the full power spectrum from alpha to delta.
+
+Alpha = numpy.zeros([len(Batches)])
+Delta = numpy.zeros([len(Batches)])
+for b in Batches:
+    temp = numpy.genfromtxt(os.path.join(Path,f'GlickoHistoryB{str(b)}.csv'), delimiter=',')
+    temp=temp[1:,-1]
+    if temp.min() <0:
+        Delta[Batches.index(b)] = temp.max() + abs(temp.min())
+    else:
+        Delta[Batches.index(b)] = temp.max() - temp.min()
+    alpha_idx = numpy.where(temp == temp.max())[0]
+    subset = temp[numpy.arange(len(temp))!=alpha_idx]
+    beta_idx = numpy.where(temp == subset.max())[0]
+    if temp[beta_idx] < 0:
+        Alpha[Batches.index(b)] = temp[alpha_idx] + abs(temp[beta_idx])
+    else:
+        Alpha[Batches.index(b)] = temp[alpha_idx] - temp[beta_idx]
 
 
+Despotism = Alpha / Delta
 
+fig, axs = plt.subplots(1, figsize=(4,7))
+x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
 
+for i in numpy.arange(10):
+    if i < 5:
+        filled = 'black'
+    else:
+        filled = 'none'
+    plt.scatter(x_jitter[i], Despotism_old[i], marker = 'o', facecolor=filled, color = 'black', s = 50)
+
+plt.xlim(0.75,1.25)
+plt.ylabel('Alpha power')
+plt.xticks([])
+plt.legend(handles = [WT,KO])
+# plt.legend(['*','+'],['Tph2 +/+','Tph2 -/-'])
+plt.show()
+
+numpy.mean(Despotism[:5])
+numpy.mean(Despotism[5:])
+numpy.var(Despotism[:5])
+numpy.var(Despotism[5:])
+scipy.stats.ttest_ind(Despotism[:5],Despotism[5:])
+
+Despotism_old = (0.67,0.24,0.34,0.35,0.52,0.67,0.36,0.08,0.29,0.1)
 #########################################################
 #                                                       #
 #                   STABLE DOMINANCE                    #
@@ -400,30 +443,26 @@ for b in Batches:
     Interactions[0,Batches.index(b)] = int(temp.shape[1])
     # print(f'{get_dominance_point(temp)} for Batch B{b}')
 
-plt.scatter(numpy.repeat(1,10), Dominance[0] / Interactions[0], marker = [numpy.concatenate([numpy.repeat('*',5), numpy.repeat('o', 5)])])
-plt.show()
 
 
-markers = numpy.concatenate([numpy.repeat('*',5), numpy.repeat('+', 5)])
-
-labels = numpy.concatenate([numpy.repeat('Tph2 +/+',5), numpy.repeat('Tph2 -/-', 5)])
-
-WT = mlines.Line2D([], [], color='black', alpha = .5,  marker='*', linestyle='None',
-                          markersize=10, label='Tph2 +/+')
-KO = mlines.Line2D([], [], color='black', alpha = .5, marker='+', linestyle='None',
-                          markersize=10, label='Tph2 -/-')
+fig, axs = plt.subplots(1, figsize=(4,7))
+x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
 
 for i in numpy.arange(10):
-    plt.scatter(Dominance[0][i], Interactions[0][i], marker = markers[i], color = 'black', alpha = .5, s = 50)
+    if i < 5:
+        filled = 'black'
+    else:
+        filled = 'none'
+    plt.scatter(x_jitter[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 50)
 
-plt.xlabel('Dominance Count')
-plt.ylabel('Interaction Count')
+plt.xlim(0.75,1.25)
+plt.ylabel('Count')
+plt.xticks([])
 plt.legend(handles = [WT,KO])
 # plt.legend(['*','+'],['Tph2 +/+','Tph2 -/-'])
 plt.show()
-
-
-import matplotlib.lines as mlines
 
 
 
