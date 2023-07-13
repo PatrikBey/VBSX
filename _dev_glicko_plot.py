@@ -103,6 +103,14 @@ def get_bins(_vector, _bincount = 20):
         _bincount = _dim/bin_size
     return(numpy.split(_vector, _bincount))
 
+def plot_clean():
+    '''
+    removing borders of plot to fix previous plots
+    '''
+    plt.gca().spines['right'].set_visible(False)
+    plt.gca().spines['top'].set_visible(False)
+    plt.gca().yaxis.set_ticks_position('left')
+    plt.gca().xaxis.set_ticks_position('bottom')
 
 def plot_corr_boxes(_list):
     '''
@@ -125,10 +133,10 @@ def plot_corr_boxes(_list):
 
 # Batches=(1,10,11,12,2,5,6,7,8,9)
 Batches=(5,2,6,10,7,1,8,9,11,12) # ordered (control / knock out)
- 
 
 
 fig, axs = plt.subplots(2, 5, sharey = True, figsize=(30,15))
+
 for b in Batches:
     id = Batches.index(b)
     if id < 5:
@@ -149,6 +157,7 @@ for b in Batches:
 plt.tight_layout()
 plt.savefig(f'/{Path}/Plots/GlickoHistory-classic.png')
 plt.close()
+
 
 
     
@@ -468,3 +477,120 @@ plt.show()
 
 
 
+
+#######################################################################
+# FINAL SELECTION PLOT: Batch 3 and 10 (6&12)
+#######################################################################
+
+
+
+
+FinalBatches = (6,12)
+fig, axs = plt.subplots(2,3, sharey = False, figsize=(30,10))
+
+fontsize = 15
+
+temp = load_data(6)
+plot_single_animals(axs[0,0],temp)
+axs[0,0].set_title(str(3), loc = 'left', fontsize = fontsize)
+axs[0,0].spines['right'].set_visible(False)
+axs[0,0].spines['top'].set_visible(False)
+axs[0,0].yaxis.set_ticks_position('left')
+axs[0,0].xaxis.set_ticks_position('bottom')
+axs[0,0].set_ylabel('Tph2 +/+ \n Glicko Rating History')
+axs[0,0].spines['left'].set_linewidth(4)
+axs[0,0].spines['bottom'].set_linewidth(4)
+axs[0,0].yaxis.label.set_fontsize(fontsize)
+# axs[0].get_xticklabels().set_fontsize(20)
+# axs[0].get_yticklabels().set_fontsize(20)
+
+temp = load_data(12)
+plot_single_animals(axs[1,0],temp)
+axs[1,0].set_title(str(10), loc = 'left', fontsize = fontsize)
+axs[1,0].spines['right'].set_visible(False)
+axs[1,0].spines['top'].set_visible(False)
+axs[1,0].yaxis.set_ticks_position('left')
+axs[1,0].xaxis.set_ticks_position('bottom')
+axs[1,0].set_ylabel('Tph2 -/- \n Glicko Rating History')
+axs[1,0].yaxis.label.set_fontsize(fontsize)
+axs[1,0].spines['left'].set_linewidth(4)
+axs[1,0].spines['bottom'].set_linewidth(4)
+
+
+for label in ([axs[0,0].title,axs[1,0].title] + axs[0,0].get_xticklabels() + axs[0,0].get_yticklabels() + axs[1,0].get_xticklabels() + axs[1,0].get_yticklabels()):
+    label.set_fontsize(fontsize)
+
+
+
+for i in numpy.arange(5):
+    temp = LastRating[:,i] / abs(LastRating[:,0:5]).max()
+    axs[0,1].scatter(numpy.repeat(i+1,4),temp,label=f'B{Batches[i]}', color='black')
+
+axs[0,1].set_ylim(-1.1,1.1)
+# axs[0,1].set_title('Tph2 +/+', loc = 'left', fontsize = fontsize)
+axs[0,1].spines['right'].set_visible(False)
+axs[0,1].spines['top'].set_visible(False)
+axs[0,1].yaxis.set_ticks_position('left')
+axs[0,1].xaxis.set_ticks_position('bottom')
+axs[0,1].set_ylabel('Final Glicko Rating (rescaled)')
+axs[0,1].yaxis.label.set_fontsize(fontsize)
+axs[0,1].spines['left'].set_linewidth(4)
+axs[0,1].spines['bottom'].set_linewidth(4)
+axs[0,1].set_xticks(numpy.arange(1,6), labels=numpy.arange(1,6))
+axs[0,1].plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+
+
+for i in numpy.arange(5,10):
+    temp = LastRating[:,i] / abs(LastRating[:,5:10]).max()
+    axs[1,1].scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', color='black',  marker = 'o', facecolor='none')
+
+axs[1,1].set_ylim(-1.1,1.1)
+# axs[0,1].set_title('Tph2 +/+', loc = 'left', fontsize = fontsize)
+axs[1,1].spines['right'].set_visible(False)
+axs[1,1].spines['top'].set_visible(False)
+axs[1,1].yaxis.set_ticks_position('left')
+axs[1,1].xaxis.set_ticks_position('bottom')
+axs[1,1].set_ylabel('Final Glicko Rating (rescaled)')
+axs[1,1].yaxis.label.set_fontsize(fontsize)
+axs[1,1].spines['left'].set_linewidth(4)
+axs[1,1].spines['bottom'].set_linewidth(4)
+axs[1,1].set_xticks(numpy.arange(1,6), labels=numpy.arange(1,6))
+axs[1,1].plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+
+
+for label in ([axs[0,1].title,axs[1,1].title] + axs[0,1].get_xticklabels() + axs[0,1].get_yticklabels() + axs[1,1].get_xticklabels() + axs[1,1].get_yticklabels()):
+    label.set_fontsize(fontsize)
+
+
+
+
+x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+
+WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+
+KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
+
+for i in numpy.arange(10):
+    if i < 5:
+        filled = 'black'
+    else:
+        filled = 'none'
+    axs[0,2].scatter(x_jitter[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 50)
+
+axs[0,2].set_xlim(0.75,1.25)
+axs[0,2].spines['right'].set_visible(False)
+axs[0,2].spines['top'].set_visible(False)
+axs[0,2].yaxis.set_ticks_position('left')
+axs[0,2].xaxis.set_ticks_position('bottom')
+axs[0,2].set_ylabel('Interaction Count')
+axs[0,2].yaxis.label.set_fontsize(fontsize)
+axs[0,2].spines['left'].set_linewidth(4)
+axs[0,2].spines['bottom'].set_linewidth(4)
+axs[0,2].set_xticks([])
+axs[0,2].legend(handles = [WT,KO])
+
+
+
+plt.tight_layout()
+plt.savefig(f'/{Path}/Plots/FinalCombination.png')
+plt.close()
