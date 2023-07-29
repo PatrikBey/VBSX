@@ -20,3 +20,13 @@ Considering this section of the results - can you re-generate/fnd the figure it 
 
 "Finally, we examined the power distribution of the dominant males across groups by evaluating how each alpha male monopolized agonistic interactions within their social group or said otherwise, how (un)equally distributed was the power within groups. Considering the individual’s final rankings, a dominant male is considered “despotic” when it imposes towards the beta (second highest ranked) male a power of one third of the total imposed power on the lowest ranked animal.  Here we found that 40% of the Tph2-deficient alpha males imposed such “despotic power” while 80% of the Tph2-control dominant males did (See group’s scores in Supplementary Table 3). The minimal power a dominant mouse imposed on the group was three times higher in the Tph2-control groups than in the Tph2-deficient groups (23.9% vs. 7.9%). At the same time the most despotic alpha males in both groups displayed a similar ratio of imposed power (around 67%; see group 1 and group 6 in Fig.5). Similarly, the average imposed power in the control groups surpasses the deficient groups by a factor of 1.5 (42% vs 30%). The observed variance in imposed power within the groups is twice as large in the Tph2-deficient cohort (0.058 vs. 0.029) indicating a less robust power distribution"
 
+
+## UPDATE 2023/07/29
+
+adjust wideness of final combi plot (B,C) (b=1/3 c=1/4)
+add alpha power plot (D) similar to C
+add caption text
+adjust methods description text
+
+WHY ALPHA POWER different?
+
