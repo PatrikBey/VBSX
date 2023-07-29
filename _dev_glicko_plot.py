@@ -322,6 +322,8 @@ for b in Batches:
 
 # plt.legend()
 
+fig, axs = plt.subplots(figsize=(30,10))
+
 
 BatchesList = list(Batches)
 for b in BatchesList:
@@ -329,6 +331,13 @@ for b in BatchesList:
     plot_corr_boxes(get_bins(RankCorrs[b]))
     plt.ylim([-1,1.1])
     plt.title(str(BatchesList.index(b)+1), loc = 'left')
+
+
+
+
+plt.tight_layout()
+plt.savefig(f'/{Path}/Plots/GlickoCorrelations.png')
+plt.close()
 
 
 plt.show()
@@ -482,17 +491,19 @@ plt.show()
 # FINAL SELECTION PLOT: Batch 3 and 10 (6&12)
 #######################################################################
 
-
-
+### GLICKO RATING HISTORY
 
 FinalBatches = (6,12)
-fig, axs = plt.subplots(2,3, sharey = False, figsize=(30,10))
+fig, axs = plt.subplots(2,3, sharey = False, figsize=(25,10), gridspec_kw={'width_ratios':[4,1.6,1.3]})
+
+# f, (a0, a1) = plt.subplots(1, 2, gridspec_kw={'width_ratios': [3, 1]})
+
 
 fontsize = 15
 
 temp = load_data(6)
 plot_single_animals(axs[0,0],temp)
-axs[0,0].set_title(str(3), loc = 'left', fontsize = fontsize)
+axs[0,0].set_title("A \n" , loc = 'left', fontsize = fontsize, weight='bold')
 axs[0,0].spines['right'].set_visible(False)
 axs[0,0].spines['top'].set_visible(False)
 axs[0,0].yaxis.set_ticks_position('left')
@@ -501,12 +512,13 @@ axs[0,0].set_ylabel('Tph2 +/+ \n Glicko Rating History')
 axs[0,0].spines['left'].set_linewidth(4)
 axs[0,0].spines['bottom'].set_linewidth(4)
 axs[0,0].yaxis.label.set_fontsize(fontsize)
+axs[0,0].set_ylim(-1.05,1.05)
 # axs[0].get_xticklabels().set_fontsize(20)
 # axs[0].get_yticklabels().set_fontsize(20)
 
 temp = load_data(12)
 plot_single_animals(axs[1,0],temp)
-axs[1,0].set_title(str(10), loc = 'left', fontsize = fontsize)
+# axs[1,0].set_title('Batch 10', loc = 'left', fontsize = fontsize, weight='bold')
 axs[1,0].spines['right'].set_visible(False)
 axs[1,0].spines['top'].set_visible(False)
 axs[1,0].yaxis.set_ticks_position('left')
@@ -515,18 +527,20 @@ axs[1,0].set_ylabel('Tph2 -/- \n Glicko Rating History')
 axs[1,0].yaxis.label.set_fontsize(fontsize)
 axs[1,0].spines['left'].set_linewidth(4)
 axs[1,0].spines['bottom'].set_linewidth(4)
-
+axs[1,0].set_ylim(-1.05,1.05)
 
 for label in ([axs[0,0].title,axs[1,0].title] + axs[0,0].get_xticklabels() + axs[0,0].get_yticklabels() + axs[1,0].get_xticklabels() + axs[1,0].get_yticklabels()):
     label.set_fontsize(fontsize)
 
-
+### FINAL GLICKO RATING
 
 for i in numpy.arange(5):
     temp = LastRating[:,i] / abs(LastRating[:,0:5]).max()
     axs[0,1].scatter(numpy.repeat(i+1,4),temp,label=f'B{Batches[i]}', color='black')
 
+
 axs[0,1].set_ylim(-1.1,1.1)
+axs[0,1].set_title('B \n', loc = 'left',fontsize = fontsize, weight='bold')
 # axs[0,1].set_title('Tph2 +/+', loc = 'left', fontsize = fontsize)
 axs[0,1].spines['right'].set_visible(False)
 axs[0,1].spines['top'].set_visible(False)
@@ -544,6 +558,7 @@ for i in numpy.arange(5,10):
     temp = LastRating[:,i] / abs(LastRating[:,5:10]).max()
     axs[1,1].scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', color='black',  marker = 'o', facecolor='none')
 
+
 axs[1,1].set_ylim(-1.1,1.1)
 # axs[0,1].set_title('Tph2 +/+', loc = 'left', fontsize = fontsize)
 axs[1,1].spines['right'].set_visible(False)
@@ -554,14 +569,14 @@ axs[1,1].set_ylabel('Final Glicko Rating (rescaled)')
 axs[1,1].yaxis.label.set_fontsize(fontsize)
 axs[1,1].spines['left'].set_linewidth(4)
 axs[1,1].spines['bottom'].set_linewidth(4)
-axs[1,1].set_xticks(numpy.arange(1,6), labels=numpy.arange(1,6))
+axs[1,1].set_xticks(numpy.arange(1,6), labels=numpy.arange(6,11))
 axs[1,1].plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
 
 
 for label in ([axs[0,1].title,axs[1,1].title] + axs[0,1].get_xticklabels() + axs[0,1].get_yticklabels() + axs[1,1].get_xticklabels() + axs[1,1].get_yticklabels()):
     label.set_fontsize(fontsize)
 
-
+### DOMINANCE POINTS
 
 
 x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
@@ -577,6 +592,8 @@ for i in numpy.arange(10):
         filled = 'none'
     axs[0,2].scatter(x_jitter[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 50)
 
+
+axs[0,2].set_title('C \n', loc = 'left', fontsize = fontsize, weight='bold')
 axs[0,2].set_xlim(0.75,1.25)
 axs[0,2].spines['right'].set_visible(False)
 axs[0,2].spines['top'].set_visible(False)
@@ -591,6 +608,37 @@ axs[0,2].legend(handles = [WT,KO])
 
 
 
+
+#### DESPOTISM
+x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+
+WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+
+KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
+
+for i in numpy.arange(10):
+    if i < 5:
+        filled = 'black'
+    else:
+        filled = 'none'
+    axs[1,2].scatter(x_jitter[i], Despotism_old[i], marker = 'o', facecolor=filled, color = 'black', s = 50)
+
+
+axs[1,2].set_title('D \n', loc = 'left', fontsize = fontsize, weight='bold')
+axs[1,2].set_xlim(0.75,1.25)
+axs[1,2].spines['right'].set_visible(False)
+axs[1,2].spines['top'].set_visible(False)
+axs[1,2].yaxis.set_ticks_position('left')
+axs[1,2].xaxis.set_ticks_position('bottom')
+axs[1,2].set_ylabel('Alpha Power')
+axs[1,2].yaxis.label.set_fontsize(fontsize)
+axs[1,2].spines['left'].set_linewidth(4)
+axs[1,2].spines['bottom'].set_linewidth(4)
+axs[1,2].set_xticks([])
+axs[1,2].legend(handles = [WT,KO])
+
+
+
 plt.tight_layout()
-plt.savefig(f'/{Path}/Plots/FinalCombination.png')
+plt.savefig(f'/{Path}/Plots/FinalCombination_new.png')
 plt.close()
