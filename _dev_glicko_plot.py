@@ -131,32 +131,57 @@ def plot_corr_boxes(_list):
     plt.plot(smoothing[:,0],smoothing[:,1], color = 'darkgrey')
 
 
+# Plot alpha male number of interactions until ranking does not change anymore
+def get_dominance_point(_array):
+    '''
+    extract the last time first time point where final dominant animal doesn't change anymore
+    '''
+    id = numpy.where(_array[:,-1]==_array[:,-1].max())[0][0]
+    if _array[id,-2] != _array[:,-2].max():
+        return(_array.shape[1])
+    order = []
+    test_index = numpy.sort(numpy.arange(_array.shape[1]-1))[::-1]
+    for i in test_index:
+        if _array[id,i] == _array[:,i].max():
+            order.append(i)
+        else:
+            break;
+    return(numpy.array(order).min())
+
+
+
+
 # Batches=(1,10,11,12,2,5,6,7,8,9)
 Batches=(5,2,6,10,7,1,8,9,11,12) # ordered (control / knock out)
 
 
-fig, axs = plt.subplots(2, 5, sharey = True, figsize=(30,15))
 
-for b in Batches:
-    id = Batches.index(b)
-    if id < 5:
-        x=0
-    else:
-        x=1
-        id=id-5
-    print(f'{b} - {x}')
-    temp = load_data(b)
-    plot_single_animals(axs[x,id],temp)
-    axs[x,id].set_title(str(Batches.index(b)+1), loc = 'left')
-    if id == 0:
-        if Batches.index(b)<5:
-           axs[x,id].set(ylabel='Tph2 +/+ \n glicko rating')
-        else:
-            axs[x,id].set(ylabel='Tph2 -/- \n glicko rating')
+##############
+# GLICKO HISTORY CLASSIC
+##############
 
-plt.tight_layout()
-plt.savefig(f'/{Path}/Plots/GlickoHistory-classic.png')
-plt.close()
+# fig, axs = plt.subplots(2, 5, sharey = True, figsize=(30,15))
+
+# for b in Batches:
+#     id = Batches.index(b)
+#     if id < 5:
+#         x=0
+#     else:
+#         x=1
+#         id=id-5
+#     print(f'{b} - {x}')
+#     temp = load_data(b)
+#     plot_single_animals(axs[x,id],temp)
+#     axs[x,id].set_title(str(Batches.index(b)+1), loc = 'left')
+#     if id == 0:
+#         if Batches.index(b)<5:
+#            axs[x,id].set(ylabel='Tph2 +/+ \n glicko rating')
+#         else:
+#             axs[x,id].set(ylabel='Tph2 -/- \n glicko rating')
+
+# plt.tight_layout()
+# plt.savefig(f'/{Path}/Plots/GlickoHistory-classic.png')
+# plt.close()
 
 
 
@@ -227,39 +252,39 @@ for b in Batches:
 #
 #########################################################
 
-fig, axs = plt.subplots(2, 1, figsize=(5,10))
+# fig, axs = plt.subplots(2, 1, figsize=(5,10))
 
-plt.subplot(2,1,1)
-for i in numpy.arange(5):
-    temp = LastRating[:,i] / abs(LastRating[:,0:5]).max()
-    plt.scatter(numpy.repeat(i+1,4),temp,label=f'B{Batches[i]}', color='black')
-    plt.ylim(-1.1,1.1)
+# plt.subplot(2,1,1)
+# for i in numpy.arange(5):
+#     temp = LastRating[:,i] / abs(LastRating[:,0:5]).max()
+#     plt.scatter(numpy.repeat(i+1,4),temp,label=f'B{Batches[i]}', color='black')
+#     plt.ylim(-1.1,1.1)
 
-plt.ylabel('Final Glicko rating (rescaled)')
-plt.xticks(ticks = numpy.arange(1,6), labels=numpy.arange(1,6))
-plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
-# plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,0:5], axis = 0), ls='--', label='mean')
-plt.title('Tph2 +/+')
+# plt.ylabel('Final Glicko rating (rescaled)')
+# plt.xticks(ticks = numpy.arange(1,6), labels=numpy.arange(1,6))
+# plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+# # plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,0:5], axis = 0), ls='--', label='mean')
+# plt.title('Tph2 +/+')
 
-plt.subplot(2,1,2)
-for i in numpy.arange(5,10):
-    temp = LastRating[:,i] / abs(LastRating[:,5:10]).max()
-    plt.scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', color='black')
-    plt.ylim(-1.1,1.1)
+# plt.subplot(2,1,2)
+# for i in numpy.arange(5,10):
+#     temp = LastRating[:,i] / abs(LastRating[:,5:10]).max()
+#     plt.scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', color='black')
+#     plt.ylim(-1.1,1.1)
 
-plt.ylabel('Final Glicko rating (rescaled)')
-# plt.yticks(ticks = numpy.arange(-1,1.25,0.25), labels=[])
-plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
-plt.xticks(ticks = numpy.arange(1,6), labels=numpy.arange(6,11))
-# plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,5:10], axis = 0), ls='--', label='mean')
-plt.title('Tph2 -/-')
-plt.xlabel('Batches')
+# plt.ylabel('Final Glicko rating (rescaled)')
+# # plt.yticks(ticks = numpy.arange(-1,1.25,0.25), labels=[])
+# plt.plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+# plt.xticks(ticks = numpy.arange(1,6), labels=numpy.arange(6,11))
+# # plt.plot(numpy.arange(1,6),numpy.mean(LastRating[:,5:10], axis = 0), ls='--', label='mean')
+# plt.title('Tph2 -/-')
+# plt.xlabel('Batches')
 
-# plt.tick_params(which = 'both', top=False, bottom=False, left=False, right=False)
-# plt.xlabel("Batches")
+# # plt.tick_params(which = 'both', top=False, bottom=False, left=False, right=False)
+# # plt.xlabel("Batches")
 
-plt.tight_layout()
-plt.show()
+# plt.tight_layout()
+# plt.show()
 
 
 # last rating rescaled at last timepoint
@@ -322,26 +347,30 @@ for b in Batches:
 
 # plt.legend()
 
-fig, axs = plt.subplots(figsize=(30,10))
+#####################
+# RANK CORRELATION CLASSIC
+#####################
+
+# fig, axs = plt.subplots(figsize=(30,10))
 
 
-BatchesList = list(Batches)
-for b in BatchesList:
-    plt.subplot(2,5,BatchesList.index(b)+1)
-    plot_corr_boxes(get_bins(RankCorrs[b]))
-    plt.ylim([-1,1.1])
-    plt.title(str(BatchesList.index(b)+1), loc = 'left')
+# BatchesList = list(Batches)
+# for b in BatchesList:
+#     plt.subplot(2,5,BatchesList.index(b)+1)
+#     plot_corr_boxes(get_bins(RankCorrs[b]))
+#     plt.ylim([-1,1.1])
+#     plt.title(str(BatchesList.index(b)+1), loc = 'left')
 
 
 
 
-plt.tight_layout()
-plt.savefig(f'/{Path}/Plots/GlickoCorrelations.png')
-plt.close()
+# plt.tight_layout()
+# plt.savefig(f'/{Path}/Plots/GlickoCorrelations.png')
+# plt.close()
 
 
-plt.show()
-# VarPlot
+# plt.show()
+# # # VarPlot
 
 # plt.figure(figsize=(40,20))
 
@@ -402,24 +431,27 @@ for b in Batches:
 
 Despotism = Alpha / Delta
 
-fig, axs = plt.subplots(1, figsize=(4,7))
-x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
-WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
-KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
+######
+# DESPOTISM SINGLE PLOT
+######
+# fig, axs = plt.subplots(1, figsize=(4,7))
+# x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+# WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+# KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
 
-for i in numpy.arange(10):
-    if i < 5:
-        filled = 'black'
-    else:
-        filled = 'none'
-    plt.scatter(x_jitter[i], Despotism_old[i], marker = 'o', facecolor=filled, color = 'black', s = 50)
+# for i in numpy.arange(10):
+#     if i < 5:
+#         filled = 'black'
+#     else:
+#         filled = 'none'
+#     plt.scatter(x_jitter[i], Despotism_old[i], marker = 'o', facecolor=filled, color = 'black', s = 50)
 
-plt.xlim(0.75,1.25)
-plt.ylabel('Alpha power')
-plt.xticks([])
-plt.legend(handles = [WT,KO])
-# plt.legend(['*','+'],['Tph2 +/+','Tph2 -/-'])
-plt.show()
+# plt.xlim(0.75,1.25)
+# plt.ylabel('Alpha power')
+# plt.xticks([])
+# plt.legend(handles = [WT,KO])
+# # plt.legend(['*','+'],['Tph2 +/+','Tph2 -/-'])
+# plt.show()
 
 numpy.mean(Despotism[:5])
 numpy.mean(Despotism[5:])
@@ -434,22 +466,7 @@ Despotism_old = (0.67,0.24,0.34,0.35,0.52,0.67,0.36,0.08,0.29,0.1)
 #                                                       #
 #########################################################
 
-# Plot alpha male number of interactions until ranking does not change anymore
-def get_dominance_point(_array):
-    '''
-    extract the last time first time point where final dominant animal doesn't change anymore
-    '''
-    id = numpy.where(_array[:,-1]==_array[:,-1].max())[0][0]
-    if _array[id,-2] != _array[:,-2].max():
-        return(_array.shape[1])
-    order = []
-    test_index = numpy.sort(numpy.arange(_array.shape[1]-1))[::-1]
-    for i in test_index:
-        if _array[id,i] == _array[:,i].max():
-            order.append(i)
-        else:
-            break;
-    return(numpy.array(order).min())
+
 
 
 Dominance = numpy.zeros([1,len(Batches)])
@@ -462,25 +479,29 @@ for b in Batches:
     # print(f'{get_dominance_point(temp)} for Batch B{b}')
 
 
+################
+# DOMINANCE PLOT SINGLE
+################
 
-fig, axs = plt.subplots(1, figsize=(4,7))
-x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
-WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
-KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
 
-for i in numpy.arange(10):
-    if i < 5:
-        filled = 'black'
-    else:
-        filled = 'none'
-    plt.scatter(x_jitter[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 50)
+# fig, axs = plt.subplots(1, figsize=(4,7))
+# x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+# WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+# KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
 
-plt.xlim(0.75,1.25)
-plt.ylabel('Count')
-plt.xticks([])
-plt.legend(handles = [WT,KO])
-# plt.legend(['*','+'],['Tph2 +/+','Tph2 -/-'])
-plt.show()
+# for i in numpy.arange(10):
+#     if i < 5:
+#         filled = 'black'
+#     else:
+#         filled = 'none'
+#     plt.scatter(x_jitter[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 50)
+
+# plt.xlim(0.75,1.25)
+# plt.ylabel('Count')
+# plt.xticks([])
+# plt.legend(handles = [WT,KO])
+# # plt.legend(['*','+'],['Tph2 +/+','Tph2 -/-'])
+# plt.show()
 
 
 
@@ -494,21 +515,25 @@ plt.show()
 ### GLICKO RATING HISTORY
 
 FinalBatches = (6,12)
-fig, axs = plt.subplots(2,3, sharey = False, figsize=(25,10), gridspec_kw={'width_ratios':[4,1.6,1.3]})
+fig, axs = plt.subplots(2,3, sharey = False, figsize=(25,10), gridspec_kw={'width_ratios':[3.5,1,1]})
 
 # f, (a0, a1) = plt.subplots(1, 2, gridspec_kw={'width_ratios': [3, 1]})
 
 
-fontsize = 15
+fontsize = 20
 
 temp = load_data(6)
 plot_single_animals(axs[0,0],temp)
-axs[0,0].set_title("A \n" , loc = 'left', fontsize = fontsize, weight='bold')
+axs[0,0].set_title("A \nTph2 +/+" , loc = 'left', fontsize = fontsize, weight='bold')
 axs[0,0].spines['right'].set_visible(False)
 axs[0,0].spines['top'].set_visible(False)
 axs[0,0].yaxis.set_ticks_position('left')
 axs[0,0].xaxis.set_ticks_position('bottom')
-axs[0,0].set_ylabel('Tph2 +/+ \n Glicko Rating History')
+axs[0,0].tick_params(width=3, length=7)
+
+
+# axs[0,0].set_ylabel('Tph2 +/+ \n Glicko Rating History')
+axs[0,0].set_ylabel('Glicko Rating History')
 axs[0,0].spines['left'].set_linewidth(4)
 axs[0,0].spines['bottom'].set_linewidth(4)
 axs[0,0].yaxis.label.set_fontsize(fontsize)
@@ -518,17 +543,17 @@ axs[0,0].set_ylim(-1.05,1.05)
 
 temp = load_data(12)
 plot_single_animals(axs[1,0],temp)
-# axs[1,0].set_title('Batch 10', loc = 'left', fontsize = fontsize, weight='bold')
+axs[1,0].set_title('Tph2 -/-', loc = 'left', fontsize = fontsize, weight='bold')
 axs[1,0].spines['right'].set_visible(False)
 axs[1,0].spines['top'].set_visible(False)
 axs[1,0].yaxis.set_ticks_position('left')
 axs[1,0].xaxis.set_ticks_position('bottom')
-axs[1,0].set_ylabel('Tph2 -/- \n Glicko Rating History')
+axs[1,0].set_ylabel('Glicko Rating History')
 axs[1,0].yaxis.label.set_fontsize(fontsize)
 axs[1,0].spines['left'].set_linewidth(4)
 axs[1,0].spines['bottom'].set_linewidth(4)
 axs[1,0].set_ylim(-1.05,1.05)
-
+axs[1,0].tick_params(width=3, length=7)
 for label in ([axs[0,0].title,axs[1,0].title] + axs[0,0].get_xticklabels() + axs[0,0].get_yticklabels() + axs[1,0].get_xticklabels() + axs[1,0].get_yticklabels()):
     label.set_fontsize(fontsize)
 
@@ -536,42 +561,43 @@ for label in ([axs[0,0].title,axs[1,0].title] + axs[0,0].get_xticklabels() + axs
 
 for i in numpy.arange(5):
     temp = LastRating[:,i] / abs(LastRating[:,0:5]).max()
-    axs[0,1].scatter(numpy.repeat(i+1,4),temp,label=f'B{Batches[i]}', color='black')
+    axs[0,1].scatter(numpy.repeat(i+1,4),temp,label=f'B{Batches[i]}', s = 100, color='black')
 
 
 axs[0,1].set_ylim(-1.1,1.1)
-axs[0,1].set_title('B \n', loc = 'left',fontsize = fontsize, weight='bold')
+axs[0,1].set_title('B \nTph2 +/+', loc = 'left',fontsize = fontsize, weight='bold')
 # axs[0,1].set_title('Tph2 +/+', loc = 'left', fontsize = fontsize)
 axs[0,1].spines['right'].set_visible(False)
 axs[0,1].spines['top'].set_visible(False)
 axs[0,1].yaxis.set_ticks_position('left')
 axs[0,1].xaxis.set_ticks_position('bottom')
-axs[0,1].set_ylabel('Final Glicko Rating (rescaled)')
+axs[0,1].set_ylabel('Final Glicko')
 axs[0,1].yaxis.label.set_fontsize(fontsize)
 axs[0,1].spines['left'].set_linewidth(4)
 axs[0,1].spines['bottom'].set_linewidth(4)
 axs[0,1].set_xticks(numpy.arange(1,6), labels=numpy.arange(1,6))
 axs[0,1].plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
-
+axs[0,1].tick_params(width=3, length=7)
 
 for i in numpy.arange(5,10):
     temp = LastRating[:,i] / abs(LastRating[:,5:10]).max()
-    axs[1,1].scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', color='black',  marker = 'o', facecolor='none')
+    axs[1,1].scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', s=100, color='black',  marker = 'o', facecolor='none')
 
-
+axs[1,1].set_title('Tph2 -/-', loc = 'left',fontsize = fontsize, weight='bold')
 axs[1,1].set_ylim(-1.1,1.1)
 # axs[0,1].set_title('Tph2 +/+', loc = 'left', fontsize = fontsize)
 axs[1,1].spines['right'].set_visible(False)
 axs[1,1].spines['top'].set_visible(False)
 axs[1,1].yaxis.set_ticks_position('left')
 axs[1,1].xaxis.set_ticks_position('bottom')
-axs[1,1].set_ylabel('Final Glicko Rating (rescaled)')
+# axs[1,1].set_ylabel('Final Glicko Rating (rescaled)')
+axs[1,1].set_ylabel('Final Glicko')
 axs[1,1].yaxis.label.set_fontsize(fontsize)
 axs[1,1].spines['left'].set_linewidth(4)
 axs[1,1].spines['bottom'].set_linewidth(4)
 axs[1,1].set_xticks(numpy.arange(1,6), labels=numpy.arange(6,11))
 axs[1,1].plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
-
+axs[1,1].tick_params(width=3, length=7)
 
 for label in ([axs[0,1].title,axs[1,1].title] + axs[0,1].get_xticklabels() + axs[0,1].get_yticklabels() + axs[1,1].get_xticklabels() + axs[1,1].get_yticklabels()):
     label.set_fontsize(fontsize)
@@ -590,7 +616,7 @@ for i in numpy.arange(10):
         filled = 'black'
     else:
         filled = 'none'
-    axs[0,2].scatter(x_jitter[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 50)
+    axs[0,2].scatter(x_jitter[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 100)
 
 
 axs[0,2].set_title('C \n', loc = 'left', fontsize = fontsize, weight='bold')
@@ -605,7 +631,7 @@ axs[0,2].spines['left'].set_linewidth(4)
 axs[0,2].spines['bottom'].set_linewidth(4)
 axs[0,2].set_xticks([])
 axs[0,2].legend(handles = [WT,KO])
-
+axs[0,2].tick_params(width=3, length=7)
 
 
 
@@ -621,7 +647,7 @@ for i in numpy.arange(10):
         filled = 'black'
     else:
         filled = 'none'
-    axs[1,2].scatter(x_jitter[i], Despotism_old[i], marker = 'o', facecolor=filled, color = 'black', s = 50)
+    axs[1,2].scatter(x_jitter[i], Despotism_old[i], marker = 'o', facecolor=filled, color = 'black', s = 100)
 
 
 axs[1,2].set_title('D \n', loc = 'left', fontsize = fontsize, weight='bold')
@@ -635,8 +661,11 @@ axs[1,2].yaxis.label.set_fontsize(fontsize)
 axs[1,2].spines['left'].set_linewidth(4)
 axs[1,2].spines['bottom'].set_linewidth(4)
 axs[1,2].set_xticks([])
-axs[1,2].legend(handles = [WT,KO])
+# axs[1,2].legend(handles = [WT,KO])
+axs[1,2].tick_params(width=3, length=7)
 
+for label in ([axs[0,2].title,axs[1,2].title] + axs[0,2].get_xticklabels() + axs[0,2].get_yticklabels() + axs[1,2].get_xticklabels() + axs[1,2].get_yticklabels()):
+    label.set_fontsize(fontsize)
 
 
 plt.tight_layout()
