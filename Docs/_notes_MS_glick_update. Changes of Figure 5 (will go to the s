@@ -30,3 +30,15 @@ adjust methods description text
 
 WHY ALPHA POWER different?
 
+
+## UPDATE 2023/08/02
+
+
+A: x=0 closer to y axis line
+Width of lines a bit bigger so we don’t lose sight of the omega
+Need a title to the x axis (can be placed under the -/- figure only
+B: Need a title to the x axis (can be placed under the -/- figure only
+C: legend :text and dot bigger + remove the line of the box around it
+D: can you have the 2 black dots around 0.35 less overlapping?
+All: ABCD bigger font (see figure below) and not bold
+

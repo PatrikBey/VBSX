@@ -71,7 +71,7 @@ def plot_single_animals(_ax, _data):
     _order = sort_ranks(_data[:,-1])
     _data = _data / abs(_data).max()
     for i in numpy.arange(4):
-        _ax.plot(_data[_order[i],:], ls = _style[i], color = 'black')
+        _ax.plot(_data[_order[i],:], ls = _style[i], color = 'black', linewidth = 3)
 
 def sort_ranks(ranks):
     '''
@@ -524,7 +524,7 @@ fontsize = 20
 
 temp = load_data(6)
 plot_single_animals(axs[0,0],temp)
-axs[0,0].set_title("A \nTph2 +/+" , loc = 'left', fontsize = fontsize, weight='bold')
+axs[0,0].set_title("A. Glicko history \nTph2 +/+" , loc = 'left', fontsize = fontsize+5) #,weight='bold')
 axs[0,0].spines['right'].set_visible(False)
 axs[0,0].spines['top'].set_visible(False)
 axs[0,0].yaxis.set_ticks_position('left')
@@ -533,29 +533,34 @@ axs[0,0].tick_params(width=3, length=7)
 
 
 # axs[0,0].set_ylabel('Tph2 +/+ \n Glicko Rating History')
-axs[0,0].set_ylabel('Glicko Rating History')
+axs[0,0].set_ylabel('Glicko Rating')
 axs[0,0].spines['left'].set_linewidth(4)
 axs[0,0].spines['bottom'].set_linewidth(4)
 axs[0,0].yaxis.label.set_fontsize(fontsize)
 axs[0,0].set_ylim(-1.05,1.05)
+axs[0,0].set_xlim(-1,140)
 # axs[0].get_xticklabels().set_fontsize(20)
 # axs[0].get_yticklabels().set_fontsize(20)
 
 temp = load_data(12)
 plot_single_animals(axs[1,0],temp)
-axs[1,0].set_title('Tph2 -/-', loc = 'left', fontsize = fontsize, weight='bold')
+axs[1,0].set_title('Tph2 -/-', loc = 'left', fontsize = fontsize+5)#, weight='bold')
 axs[1,0].spines['right'].set_visible(False)
 axs[1,0].spines['top'].set_visible(False)
 axs[1,0].yaxis.set_ticks_position('left')
 axs[1,0].xaxis.set_ticks_position('bottom')
-axs[1,0].set_ylabel('Glicko Rating History')
+axs[1,0].set_ylabel('Glicko Rating')
 axs[1,0].yaxis.label.set_fontsize(fontsize)
 axs[1,0].spines['left'].set_linewidth(4)
 axs[1,0].spines['bottom'].set_linewidth(4)
 axs[1,0].set_ylim(-1.05,1.05)
+axs[1,0].set_xlim(-1,440)
 axs[1,0].tick_params(width=3, length=7)
+axs[1,0].set_xlabel('Interactions', fontsize=fontsize)
+
 for label in ([axs[0,0].title,axs[1,0].title] + axs[0,0].get_xticklabels() + axs[0,0].get_yticklabels() + axs[1,0].get_xticklabels() + axs[1,0].get_yticklabels()):
     label.set_fontsize(fontsize)
+
 
 ### FINAL GLICKO RATING
 
@@ -565,13 +570,13 @@ for i in numpy.arange(5):
 
 
 axs[0,1].set_ylim(-1.1,1.1)
-axs[0,1].set_title('B \nTph2 +/+', loc = 'left',fontsize = fontsize, weight='bold')
+axs[0,1].set_title('B. Final Glicko \nTph2 +/+', loc = 'left',fontsize = fontsize+5)#, weight='bold')
 # axs[0,1].set_title('Tph2 +/+', loc = 'left', fontsize = fontsize)
 axs[0,1].spines['right'].set_visible(False)
 axs[0,1].spines['top'].set_visible(False)
 axs[0,1].yaxis.set_ticks_position('left')
 axs[0,1].xaxis.set_ticks_position('bottom')
-axs[0,1].set_ylabel('Final Glicko')
+axs[0,1].set_ylabel('Glicko Rating')
 axs[0,1].yaxis.label.set_fontsize(fontsize)
 axs[0,1].spines['left'].set_linewidth(4)
 axs[0,1].spines['bottom'].set_linewidth(4)
@@ -583,7 +588,7 @@ for i in numpy.arange(5,10):
     temp = LastRating[:,i] / abs(LastRating[:,5:10]).max()
     axs[1,1].scatter(numpy.repeat(i-4,4),temp,label=f'B{Batches[i]}', s=100, color='black',  marker = 'o', facecolor='none')
 
-axs[1,1].set_title('Tph2 -/-', loc = 'left',fontsize = fontsize, weight='bold')
+axs[1,1].set_title('Tph2 -/-', loc = 'left',fontsize = fontsize+5)#, weight='bold')
 axs[1,1].set_ylim(-1.1,1.1)
 # axs[0,1].set_title('Tph2 +/+', loc = 'left', fontsize = fontsize)
 axs[1,1].spines['right'].set_visible(False)
@@ -591,13 +596,14 @@ axs[1,1].spines['top'].set_visible(False)
 axs[1,1].yaxis.set_ticks_position('left')
 axs[1,1].xaxis.set_ticks_position('bottom')
 # axs[1,1].set_ylabel('Final Glicko Rating (rescaled)')
-axs[1,1].set_ylabel('Final Glicko')
+axs[1,1].set_ylabel('Glicko Rating')
 axs[1,1].yaxis.label.set_fontsize(fontsize)
 axs[1,1].spines['left'].set_linewidth(4)
 axs[1,1].spines['bottom'].set_linewidth(4)
 axs[1,1].set_xticks(numpy.arange(1,6), labels=numpy.arange(6,11))
 axs[1,1].plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
 axs[1,1].tick_params(width=3, length=7)
+axs[1,1].set_xlabel('Batches', fontsize=fontsize)
 
 for label in ([axs[0,1].title,axs[1,1].title] + axs[0,1].get_xticklabels() + axs[0,1].get_yticklabels() + axs[1,1].get_xticklabels() + axs[1,1].get_yticklabels()):
     label.set_fontsize(fontsize)
@@ -605,22 +611,25 @@ for label in ([axs[0,1].title,axs[1,1].title] + axs[0,1].get_xticklabels() + axs
 ### DOMINANCE POINTS
 
 
-x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+# x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+x_jitter1 = numpy.array([0.95534285, 1.04809788, 0.99010567, 1.0181319 , 1.0422938 ,
+       1.00470313, 1.00175763, 0.96126289, 1.00909865, 0.97047873])
 
-WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=15, label='Tph2 +/+')
 
-KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
+KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=15, label='Tph2 -/-')
 
 for i in numpy.arange(10):
     if i < 5:
         filled = 'black'
     else:
         filled = 'none'
-    axs[0,2].scatter(x_jitter[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 100)
+    axs[0,2].scatter(x_jitter1[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 100)
 
 
-axs[0,2].set_title('C \n', loc = 'left', fontsize = fontsize, weight='bold')
+axs[0,2].set_title('C. Dominance \n', loc = 'left', fontsize = fontsize+5)#, weight='bold')
 axs[0,2].set_xlim(0.75,1.25)
+axs[0,2].set_ylim(0,599)
 axs[0,2].spines['right'].set_visible(False)
 axs[0,2].spines['top'].set_visible(False)
 axs[0,2].yaxis.set_ticks_position('left')
@@ -630,27 +639,29 @@ axs[0,2].yaxis.label.set_fontsize(fontsize)
 axs[0,2].spines['left'].set_linewidth(4)
 axs[0,2].spines['bottom'].set_linewidth(4)
 axs[0,2].set_xticks([])
-axs[0,2].legend(handles = [WT,KO])
+axs[0,2].legend(handles = [WT,KO], fontsize=fontsize, frameon = False, loc = 'upper right', bbox_to_anchor=(1,1.1))
 axs[0,2].tick_params(width=3, length=7)
 
 
 
 #### DESPOTISM
-x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+# x_jitter = numpy.repeat(1.0,10) + numpy.random.uniform(low=-.05, high=0.05, size=(10,))
+x_jitter2 = numpy.array([1.04197265, 0.98218399, 0.98294308, 1.02805604, 0.97595451,
+       1.02746764, 0.97661856, 0.97030259, 0.99442258, 1.02175054])
 
-WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+# WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
 
-KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
+# KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=100, label='Tph2 -/-')
 
 for i in numpy.arange(10):
     if i < 5:
         filled = 'black'
     else:
         filled = 'none'
-    axs[1,2].scatter(x_jitter[i], Despotism_old[i], marker = 'o', facecolor=filled, color = 'black', s = 100)
+    axs[1,2].scatter(x_jitter2[i], Despotism_old[i], marker = 'o', facecolor=filled, color = 'black', s = 100)
 
 
-axs[1,2].set_title('D \n', loc = 'left', fontsize = fontsize, weight='bold')
+axs[1,2].set_title('D. Despotism \n', loc = 'left', fontsize = fontsize+5)#, weight='bold')
 axs[1,2].set_xlim(0.75,1.25)
 axs[1,2].spines['right'].set_visible(False)
 axs[1,2].spines['top'].set_visible(False)
