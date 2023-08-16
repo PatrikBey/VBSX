@@ -474,9 +474,38 @@ Interactions = numpy.zeros([1,len(Batches)])
 for b in Batches:
     temp = numpy.genfromtxt(os.path.join(Path,f'GlickoHistoryB{str(b)}.csv'), delimiter=',')
     temp=temp[1:,1:]
+    temp.shape
     Dominance[0,Batches.index(b)] = int(get_dominance_point(temp))
     Interactions[0,Batches.index(b)] = int(temp.shape[1])
     # print(f'{get_dominance_point(temp)} for Batch B{b}')
+
+
+# DominancePoints
+# TpH2+/+
+DPWT = numpy.array([16, 60, 61, 171, 121])
+ICWT = numpy.array([157,60,137,173,176])
+DPWT.mean() #85.8
+DPWT.std()
+numpy.median(DPWT) #61
+# RATIOS
+RDPWT = DPWT / ICWT
+# TpH2-/-
+DPKO = numpy.array([125, 243, 158, 382, 438])
+ICKO = numpy.array([147,331,251,477,438])
+DPKO.mean() # 269.2
+DPKO.std()
+numpy.median(DPKO) # 243
+# RATIOS
+RDPKO = DPKO / ICKO
+numpy.median(RDPWT) #68.75%
+numpy.median(RDPKO) # 80.08%
+RDPWT.mean() # 64.46%
+RDPWT.std() # 34.08%
+RDPKO.mean() # 80.3%
+RDPKO.std() # 12.43%
+
+
+
 
 
 ################
