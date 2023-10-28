@@ -610,7 +610,8 @@ axs[0,1].yaxis.label.set_fontsize(fontsize)
 axs[0,1].spines['left'].set_linewidth(4)
 axs[0,1].spines['bottom'].set_linewidth(4)
 axs[0,1].set_xticks(numpy.arange(1,6), labels=numpy.arange(1,6))
-axs[0,1].plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+axs[0,1].axhline(0, ls ='--', color='darkgray')
+# axs[0,1].plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
 axs[0,1].tick_params(width=3, length=7)
 
 for i in numpy.arange(5,10):
@@ -630,9 +631,9 @@ axs[1,1].yaxis.label.set_fontsize(fontsize)
 axs[1,1].spines['left'].set_linewidth(4)
 axs[1,1].spines['bottom'].set_linewidth(4)
 axs[1,1].set_xticks(numpy.arange(1,6), labels=numpy.arange(6,11))
-axs[1,1].plot(numpy.arange(1,6),numpy.repeat(0,5),ls='--',color = 'darkgray')
+axs[1,1].axhline(0, ls ='--', color='darkgray')
 axs[1,1].tick_params(width=3, length=7)
-axs[1,1].set_xlabel('Batches', fontsize=fontsize)
+axs[1,1].set_xlabel('Groups ', fontsize=fontsize)
 
 for label in ([axs[0,1].title,axs[1,1].title] + axs[0,1].get_xticklabels() + axs[0,1].get_yticklabels() + axs[1,1].get_xticklabels() + axs[1,1].get_yticklabels()):
     label.set_fontsize(fontsize)
@@ -644,16 +645,20 @@ for label in ([axs[0,1].title,axs[1,1].title] + axs[0,1].get_xticklabels() + axs
 x_jitter1 = numpy.array([0.95534285, 1.04809788, 0.99010567, 1.0181319 , 1.0422938 ,
        1.00470313, 1.00175763, 0.96126289, 1.00909865, 0.97047873])
 
-WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=15, label='Tph2 +/+')
-
-KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=15, label='Tph2 -/-')
+# WT = mlines.Line2D([], [], color='black', marker='s', linestyle='None', markersize=10, label='Tph2 +/+')
+# KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='s', linestyle='None', markersize=10, label='Tph2 -/-')
 
 for i in numpy.arange(10):
     if i < 5:
         filled = 'black'
+        _label='Tph2 +/+'
     else:
         filled = 'none'
-    axs[0,2].scatter(x_jitter1[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 100)
+        _label='Tph2 -/-'
+    if i in [0,5]:
+        axs[0,2].scatter(x_jitter1[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 100, label = _label)
+    else:
+        axs[0,2].scatter(x_jitter1[i], Dominance[0][i], marker = 'o', facecolor=filled, color = 'black', s = 100)
 
 
 axs[0,2].set_title('C. Dominance \n', loc = 'left', fontsize = fontsize+5)#, weight='bold')
@@ -668,7 +673,8 @@ axs[0,2].yaxis.label.set_fontsize(fontsize)
 axs[0,2].spines['left'].set_linewidth(4)
 axs[0,2].spines['bottom'].set_linewidth(4)
 axs[0,2].set_xticks([])
-axs[0,2].legend(handles = [WT,KO], fontsize=fontsize, frameon = False, loc = 'upper right', bbox_to_anchor=(1,1.1))
+axs[0,2].legend(loc='best', frameon = False)
+# axs[0,2].legend(handles = [WT,KO], fontsize=fontsize, frameon = False, loc = 'upper right', bbox_to_anchor=(.7,1.1))
 axs[0,2].tick_params(width=3, length=7)
 
 
@@ -678,9 +684,8 @@ axs[0,2].tick_params(width=3, length=7)
 x_jitter2 = numpy.array([1.04197265, 0.98218399, 0.98294308, 1.02805604, 0.97595451,
        1.02746764, 0.97661856, 0.97030259, 0.99442258, 1.02175054])
 
-# WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
-
-# KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=100, label='Tph2 -/-')
+WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
 
 for i in numpy.arange(10):
     if i < 5:
@@ -689,7 +694,7 @@ for i in numpy.arange(10):
         filled = 'none'
     axs[1,2].scatter(x_jitter2[i], Despotism_old[i], marker = 'o', facecolor=filled, color = 'black', s = 100)
 
-
+axs[1,2].axhline(0.33, ls ='--', color='darkgray')
 axs[1,2].set_title('D. Despotism \n', loc = 'left', fontsize = fontsize+5)#, weight='bold')
 axs[1,2].set_xlim(0.75,1.25)
 axs[1,2].spines['right'].set_visible(False)
@@ -702,6 +707,7 @@ axs[1,2].spines['left'].set_linewidth(4)
 axs[1,2].spines['bottom'].set_linewidth(4)
 axs[1,2].set_xticks([])
 # axs[1,2].legend(handles = [WT,KO])
+
 axs[1,2].tick_params(width=3, length=7)
 
 for label in ([axs[0,2].title,axs[1,2].title] + axs[0,2].get_xticklabels() + axs[0,2].get_yticklabels() + axs[1,2].get_xticklabels() + axs[1,2].get_yticklabels()):
@@ -709,5 +715,10 @@ for label in ([axs[0,2].title,axs[1,2].title] + axs[0,2].get_xticklabels() + axs
 
 
 plt.tight_layout()
+
+# plt.show()
+
+
+
 plt.savefig(f'/{Path}/Plots/FinalCombination_new.png')
 plt.close()
