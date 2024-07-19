@@ -460,6 +460,13 @@ numpy.var(Despotism[5:])
 scipy.stats.ttest_ind(Despotism[:5],Despotism[5:])
 
 Despotism_old = (0.67,0.24,0.34,0.35,0.52,0.67,0.36,0.08,0.29,0.1)
+
+'''
+MISMATCH IN DATA!!!
+'''
+
+
+
 #########################################################
 #                                                       #
 #                   STABLE DOMINANCE                    #
