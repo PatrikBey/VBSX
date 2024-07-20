@@ -551,6 +551,8 @@ RDPKO.std() # 12.43%
 ### GLICKO RATING HISTORY
 
 FinalBatches = (6,12)
+
+
 fig, axs = plt.subplots(2,3, sharey = False, figsize=(25,10), gridspec_kw={'width_ratios':[3.5,1,1]})
 
 # f, (a0, a1) = plt.subplots(1, 2, gridspec_kw={'width_ratios': [3, 1]})
