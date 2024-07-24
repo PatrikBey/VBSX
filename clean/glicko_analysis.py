@@ -363,15 +363,18 @@ axs[0,2].yaxis.label.set_fontsize(fontsize)
 axs[0,2].spines['left'].set_linewidth(4)
 axs[0,2].spines['bottom'].set_linewidth(4)
 axs[0,2].set_xticks([])
-axs[0,2].legend(loc='best', frameon = False)
+# axs[0,2].legend(loc='best', frameon = False)
+
 axs[0,2].tick_params(width=3, length=7)
+
+WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
+KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
+axs[0,2].legend(handles = [WT,KO], frameon = False)
 
 #### DESPOTISM
 #---- random jitter array for spread of data points
 x_jitter2 = numpy.array([1.04197265, 0.98218399, 0.98294308, 1.02805604, 0.97595451, 1.02746764, 0.97661856, 0.97030259, 0.99442258, 1.02175054])
 
-WT = mlines.Line2D([], [], color='black', marker='o', linestyle='None', markersize=10, label='Tph2 +/+')
-KO = mlines.Line2D([], [], color='black',fillstyle = 'none',   marker='o', linestyle='None', markersize=10, label='Tph2 -/-')
 
 for i in numpy.arange(10):
     if i < 5:
@@ -401,6 +404,7 @@ for label in ([axs[0,2].title,axs[1,2].title] + axs[0,2].get_xticklabels() + axs
 
 plt.tight_layout()
 
+# plt.show()
+
 plt.savefig(os.path.join(Path,'Figure5.png'))
 plt.close()
-

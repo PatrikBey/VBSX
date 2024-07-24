@@ -63,5 +63,23 @@ bex = 2
 
 #---- load data ----#
 Data = dict()
-for b in Batches:
-    Data[f'B{b}'] = load_data(os.path.join(Path,f'Batch-B{b}.csv'))
+
+Data= load_data(os.path.join(Path,f'Batch-B{bex}.csv'))
+
+
+behav = Data[:,7:10].copy()
+
+STR.G = 'allogrooming'
+STR.F = 'Struggle at Feeder'
+
+days = '31,1,2,3,4,5'
+
+def get_subset(_array, day=1,behav = ' STR.G'):
+    '''
+    get day specific subset of behavioral scores for given behvaiour
+    '''
+    if isinstance(day,int):
+        day = str(day)
+    behav_idx = numpy.where(_array[:,8]==behav)
+    tmp = _array[behav_idx[0],:]
+    day_idx = numpy.where(tmp[:,4] == day)
