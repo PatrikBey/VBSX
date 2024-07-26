@@ -135,6 +135,9 @@ STRF = 'Struggle at Feeder'
 #                                   #
 #####################################
 
+
+#---- visualize all batches indvidually ----#
+
 for b in Batches:
 #---- load data ----#
     Data= load_data(os.path.join(Path,f'Batch-B{b}.csv'))
@@ -163,15 +166,59 @@ for b in Batches:
     plt.show()
 
 
+#####################################
+#                                   #
+#        CREATE FIGURE 4(G)         #
+#                                   #
+#####################################
 
-
-######## DEV #########
-
-
-# fig, ax = plt.subplots(2,5, sharex = True)
-
+#---- STRUGGLE AT FEEDER ----#
 
 fig, all_axes = plt.subplots(2, 5, figsize=(25, 10))
+#---- EXAMPLE BATCHES----#
+Data= load_data(os.path.join(Path,f'Batch-B2.csv'))
+DataDays = date2day(Data)
+animals = list(numpy.unique(DataDays[:,7]))
+days = list(numpy.unique(DataDays[:,-1]))
+Graphs = dict()
+for d in days:
+    behav = get_subset(DataDays, day = d, action = ' STR.F')
+    c = get_conf_matrix(animals, behav)
+    Graphs[d] = get_digraph(c)
+
+for d in days:
+    edges = Graphs[d].edges
+    weights = [Graphs[d][u][v]['weight'] for u,v in edges]
+    pos = networkx.get_node_attributes(Graphs[d],'pos')
+    networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", width = numpy.array(weights)/3, arrowstyle = '-', edge_color = 'black', node_color = '#707070', node_size = 1000, ax = all_axes[0,int(float(d))-1])
+
+Data= load_data(os.path.join(Path,f'Batch-B8.csv'))
+DataDays = date2day(Data)
+animals = list(numpy.unique(DataDays[:,7]))
+days = list(numpy.unique(DataDays[:,-1]))
+Graphs = dict()
+for d in days:
+    behav = get_subset(DataDays, day = d, action = ' STR.F')
+    c = get_conf_matrix(animals, behav)
+    Graphs[d] = get_digraph(c)
+
+for d in days:
+    edges = Graphs[d].edges
+    weights = [Graphs[d][u][v]['weight'] for u,v in edges]
+    pos = networkx.get_node_attributes(Graphs[d],'pos')
+    networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", arrowstyle = '-', width = numpy.array(weights)/3, edgecolors = 'black', node_color = 'black', linewidths = 7, node_size = 1000, ax = all_axes[1,int(float(d))-1])
+
+all_axes[0,0].set_ylabel('asd',size = 10)
+all_axes[1,0].set_ylabel('asd',size = 10)
+all_axes[0,0].tick_params(labelleft=True)
+plt.tight_layout()
+# plt.suptitle('Struggle at feeder', fontsize = 20, x=0.05, y=1)#horizontalalignment='left')
+plt.show()
+
+
+#---- ALLOGROOMING ----#
+
+fig, all_axes = plt.subplots(2, 5, figsize=(29, 12))
 #---- EXAMPLE BATCHES----#
 Data= load_data(os.path.join(Path,f'Batch-B2.csv'))
 DataDays = date2day(Data)
@@ -187,7 +234,7 @@ for d in days:
     edges = Graphs[d].edges
     weights = [Graphs[d][u][v]['weight'] for u,v in edges]
     pos = networkx.get_node_attributes(Graphs[d],'pos')
-    networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", width = numpy.array(weights)/3, arrowsize = 20, edge_color = 'darkgrey', node_color = 'darkgrey' , node_size = 1000, ax = all_axes[0,int(float(d))-1])
+    networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", width = numpy.array(weights)/3, arrowstyle = '-', edge_color = 'black', node_color = '#707070', node_size = 1000, ax = all_axes[0,int(float(d))-1])
 
 Data= load_data(os.path.join(Path,f'Batch-B8.csv'))
 DataDays = date2day(Data)
@@ -203,16 +250,13 @@ for d in days:
     edges = Graphs[d].edges
     weights = [Graphs[d][u][v]['weight'] for u,v in edges]
     pos = networkx.get_node_attributes(Graphs[d],'pos')
-    networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", arrowsize = 20, width = numpy.array(weights)/3, edgecolors = 'black', node_color = 'black' , node_size = 1000, ax = all_axes[1,int(float(d))-1])
-
+    networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", arrowstyle = '-', width = numpy.array(weights)/3, edgecolors = 'black', node_color = 'black', linewidths = 7, node_size = 1000, ax = all_axes[1,int(float(d))-1])
 
 all_axes[0,0].set_ylabel('asd',size = 10)
 all_axes[1,0].set_ylabel('asd',size = 10)
 all_axes[0,0].tick_params(labelleft=True)
-
 plt.tight_layout()
-# plt.suptitle('Struggle at feeder', fontsize = 20, x=0.05, y=1)#horizontalalignment='left')
-plt.suptitle('Allogrooming', fontsize = 20, x=0.05, y=1)#horizontalalignment='left')
+# plt.suptitle('Allogrooming', fontsize = 20, x=0.05, y=1)#horizontalalignment='left')
 plt.show()
 
 
