@@ -124,11 +124,8 @@ Path = f'{os.getcwd()}/Data'
 Batches=(5,2,6,10,7,1,8,9,11,12) # ordered (control / knock out)
 
 #---- define example batch for visualization ----#
-bex = [2,8]
+# Example batches: 2,8
 
-#---- define behavor ----#
-STRG = 'allogrooming'
-STRF = 'Struggle at Feeder'
 #####################################
 #                                   #
 #          DO COMPUTATIONS          #
@@ -138,32 +135,32 @@ STRF = 'Struggle at Feeder'
 
 #---- visualize all batches indvidually ----#
 
-for b in Batches:
-#---- load data ----#
-    Data= load_data(os.path.join(Path,f'Batch-B{b}.csv'))
-    DataDays = date2day(Data)
-    animals = list(numpy.unique(DataDays[:,7]))
-    days = list(numpy.unique(DataDays[:,-1]))
-    Graphs = dict()
-    plt.figure(figsize=[15,3])
-    for d in days:
-        behav = get_subset(DataDays, day = d)
-        c = get_conf_matrix(animals, behav)
-        Graphs[d] = get_digraph(c)
-    for d in days:
-        plt.subplot(150+days.index(d)+1)
-        plt.ylabel('asd')
-        if d == days[0]:
-            plt.xlabel(f'B{b}')
-        edges = Graphs[d].edges
-        weights = [Graphs[d][u][v]['weight'] for u,v in edges]
-        pos = networkx.get_node_attributes(Graphs[d],'pos')
-        if Batches.index(b) <= 4:
-            networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", width = weights*1000, with_labels = False, edgecolors = 'black', node_color = 'Black' , node_size = numpy.array(Graphs[d].degree)[:,1]*200+100)
-        else:
-            networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", width = weights*1000, with_labels = False, edgecolors = 'black', node_color = 'none' , node_size = numpy.array(Graphs[d].degree)[:,1]*200+100)
-    plt.tight_layout()
-    plt.show()
+# for b in Batches:
+# #---- load data ----#
+#     Data= load_data(os.path.join(Path,f'Batch-B{b}.csv'))
+#     DataDays = date2day(Data)
+#     animals = list(numpy.unique(DataDays[:,7]))
+#     days = list(numpy.unique(DataDays[:,-1]))
+#     Graphs = dict()
+#     plt.figure(figsize=[15,3])
+#     for d in days:
+#         behav = get_subset(DataDays, day = d)
+#         c = get_conf_matrix(animals, behav)
+#         Graphs[d] = get_digraph(c)
+#     for d in days:
+#         plt.subplot(150+days.index(d)+1)
+#         plt.ylabel('asd')
+#         if d == days[0]:
+#             plt.xlabel(f'B{b}')
+#         edges = Graphs[d].edges
+#         weights = [Graphs[d][u][v]['weight'] for u,v in edges]
+#         pos = networkx.get_node_attributes(Graphs[d],'pos')
+#         if Batches.index(b) <= 4:
+#             networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", width = weights*1000, with_labels = False, edgecolors = 'black', node_color = 'Black' , node_size = numpy.array(Graphs[d].degree)[:,1]*200+100)
+#         else:
+#             networkx.draw_circular(Graphs[d], connectionstyle="arc3,rad=0.2", width = weights*1000, with_labels = False, edgecolors = 'black', node_color = 'none' , node_size = numpy.array(Graphs[d].degree)[:,1]*200+100)
+#     plt.tight_layout()
+#     plt.show()
 
 
 #####################################
